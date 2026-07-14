@@ -4,6 +4,8 @@
 <dict>
 	<key>NSCameraUsageDescription</key>
 	<string>We need camera access to identify plants.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need photo library access to pick plant images.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>

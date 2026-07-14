@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'dart:typed_data';
+
 import 'package:go_router/go_router.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/splash/presentation/screens/splash_screen.dart';
@@ -30,7 +31,9 @@ final GoRouter appRouter = GoRouter(
 
     GoRoute(
       path: "/preview",
-      builder: (context, state) => const PreviewScreen(),
+      builder: (context, state) => PreviewScreen(
+        imageBytes: state.extra as Uint8List?,
+      ),
     ),
 
     GoRoute(

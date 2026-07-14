@@ -1,8 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class PreviewScreen extends StatelessWidget {
-  const PreviewScreen({super.key});
+  const PreviewScreen({super.key, this.imageBytes});
+
+  final Uint8List? imageBytes;
 
   @override
   Widget build(BuildContext context) {
@@ -23,12 +27,22 @@ class PreviewScreen extends StatelessWidget {
                     color: Colors.grey.shade300,
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: const Center(
-                    child: Icon(
-                      Icons.image,
-                      size: 100,
-                      color: Colors.grey,
-                    ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: imageBytes == null
+                        ? const Center(
+                            child: Icon(
+                              Icons.image,
+                              size: 100,
+                              color: Colors.grey,
+                            ),
+                          )
+                        : Image.memory(
+                            imageBytes!,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
+                          ),
                   ),
                 ),
               ),
