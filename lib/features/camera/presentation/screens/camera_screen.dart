@@ -17,6 +17,12 @@ class _CameraScreenState extends State<CameraScreen> {
 
   bool _isPickingImage = false;
 
+  static const Color backgroundColor = Color(0xFFF9F4EC);
+  static const Color primaryOrange = Color(0xFFC96224);
+  static const Color darkBrown = Color(0xFF38251D);
+  static const Color textGrey = Color(0xFF756D65);
+  static const Color borderColor = Color(0xFFE4DDD4);
+
   Future<void> _pickImage(ImageSource source) async {
     final supportedPlatform = !kIsWeb &&
         (defaultTargetPlatform == TargetPlatform.android ||
@@ -77,60 +83,96 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: backgroundColor,
+
       appBar: AppBar(
-        title: const Text("Identify Flower"),
+        backgroundColor: backgroundColor,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+        title: const Text(
+          "Identify Flower",
+          style: TextStyle(
+            color: primaryOrange,
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            fontFamily: "serif",
+          ),
+        ),
       ),
+
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(
+            24,
+            28,
+            24,
+            32,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Spacer(),
-
-              // Main illustration
-              Container(
-                width: 170,
-                height: 170,
-                decoration: BoxDecoration(
-                  color: Colors.green.shade50,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.local_florist,
-                  size: 90,
-                  color: Colors.green.shade700,
+              // Flower illustration circle
+              Center(
+                child: Container(
+                  width: 180,
+                  height: 180,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(
+                          alpha: 0.06,
+                        ),
+                        blurRadius: 25,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.local_florist_outlined,
+                    size: 75,
+                    color: primaryOrange,
+                  ),
                 ),
               ),
 
-              const SizedBox(height: 35),
+              const SizedBox(height: 55),
 
+              // Heading
               const Text(
                 "Identify a Flower",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 36,
+                  height: 1.15,
+                  fontWeight: FontWeight.w600,
+                  color: darkBrown,
+                  fontFamily: "serif",
                 ),
               ),
 
-              const SizedBox(height: 12),
+              const SizedBox(height: 22),
 
-              Text(
-                "Take a clear photo of a flower or choose an existing image from your gallery.",
+              // Description
+              const Text(
+                "Take a clear photo of a flower or\n"
+                "choose an existing image from your\n"
+                "gallery.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 16,
-                  height: 1.5,
-                  color: Colors.grey.shade700,
+                  fontSize: 18,
+                  height: 1.55,
+                  color: textGrey,
                 ),
               ),
 
-              const Spacer(),
+              const SizedBox(height: 55),
 
-              // Take photo
+              // Take Photo button
               SizedBox(
-                height: 58,
+                height: 62,
                 child: ElevatedButton.icon(
                   onPressed: _isPickingImage
                       ? null
@@ -138,24 +180,36 @@ class _CameraScreenState extends State<CameraScreen> {
                             ImageSource.camera,
                           ),
                   icon: const Icon(
-                    Icons.camera_alt,
-                    size: 24,
+                    Icons.camera_alt_outlined,
+                    size: 26,
                   ),
                   label: const Text(
                     "Take Photo",
                     style: TextStyle(
-                      fontSize: 17,
+                      fontSize: 19,
                       fontWeight: FontWeight.w600,
                     ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primaryOrange,
+                    foregroundColor: Colors.white,
+                    disabledBackgroundColor:
+                        primaryOrange.withValues(
+                      alpha: 0.5,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    elevation: 3,
                   ),
                 ),
               ),
 
               const SizedBox(height: 16),
 
-              // Gallery
+              // Gallery button
               SizedBox(
-                height: 58,
+                height: 62,
                 child: OutlinedButton.icon(
                   onPressed: _isPickingImage
                       ? null
@@ -164,26 +218,38 @@ class _CameraScreenState extends State<CameraScreen> {
                           ),
                   icon: const Icon(
                     Icons.photo_library_outlined,
-                    size: 24,
+                    size: 25,
                   ),
                   label: const Text(
                     "Choose from Gallery",
                     style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: primaryOrange,
+                    side: const BorderSide(
+                      color: borderColor,
+                      width: 2,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
                     ),
                   ),
                 ),
               ),
 
+              // Loading indicator
               if (_isPickingImage) ...[
                 const SizedBox(height: 24),
                 const Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(
+                    color: primaryOrange,
+                  ),
                 ),
               ],
 
-              const SizedBox(height: 20),
             ],
           ),
         ),
