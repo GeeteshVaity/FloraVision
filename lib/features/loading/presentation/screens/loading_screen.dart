@@ -1,44 +1,64 @@
-import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../models/prediction.dart';
+import '../../../../services/plant_classifier.dart';
+
 class LoadingScreen extends StatefulWidget {
-  const LoadingScreen({super.key});
+  const LoadingScreen({
+    super.key,
+    required this.imageFile,
+  });
+
+  final File imageFile;
 
   @override
   State<LoadingScreen> createState() => _LoadingScreenState();
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
-
   @override
   void initState() {
     super.initState();
+    _classifyPlant();
+  }
 
-    Timer(const Duration(seconds: 2), () {
+  Future<void> _classifyPlant() async {
+    try {
+      final Prediction prediction =
+          await PlantClassifier().classify(widget.imageFile);
 
       if (!mounted) return;
 
-      context.go("/result");
-    });
+      context.go(
+        "/result",
+        extra: prediction,
+      );
+    } catch (e) {
+      debugPrint("Classification Error: $e");
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Failed to classify plant.\n$e"),
+        ),
+      );
+
+      context.pop();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-
       body: SafeArea(
-
         child: Center(
-
           child: Column(
-
             mainAxisAlignment: MainAxisAlignment.center,
-
             children: [
-
               const Icon(
                 Icons.search,
                 size: 90,
@@ -57,7 +77,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
               const SizedBox(height: 12),
 
               Text(
-                "Please wait...",
+                "Running AI Model...",
                 style: TextStyle(
                   color: Colors.grey.shade700,
                   fontSize: 16,
@@ -67,7 +87,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
               const SizedBox(height: 40),
 
               const CircularProgressIndicator(),
-
             ],
           ),
         ),

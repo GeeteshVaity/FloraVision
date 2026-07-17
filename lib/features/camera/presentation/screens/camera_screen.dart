@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +14,7 @@ class CameraScreen extends StatefulWidget {
 
 class _CameraScreenState extends State<CameraScreen> {
   final ImagePicker _picker = ImagePicker();
+
   bool _isPickingImage = false;
 
   Future<void> _pickImage(ImageSource source) async {
@@ -23,43 +26,40 @@ class _CameraScreenState extends State<CameraScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-            'Camera capture is available on Android and iOS only.',
+            "Camera is available only on Android and iOS.",
           ),
         ),
       );
       return;
     }
 
-    if (_isPickingImage) {
-      return;
-    }
+    if (_isPickingImage) return;
 
     setState(() {
       _isPickingImage = true;
     });
 
     try {
-      final XFile? image = await _picker.pickImage(source: source);
+      final XFile? pickedImage = await _picker.pickImage(
+        source: source,
+      );
 
-      if (!mounted || image == null) {
+      if (pickedImage == null || !mounted) {
         return;
       }
 
-      final Uint8List imageBytes = await image.readAsBytes();
+      final File imageFile = File(pickedImage.path);
 
-      if (!mounted) {
-        return;
-      }
-
-      context.push('/preview', extra: imageBytes);
-    } catch (error) {
-      if (!mounted) {
-        return;
-      }
+      context.push(
+        "/preview",
+        extra: imageFile,
+      );
+    } catch (e) {
+      if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Unable to open the camera: $error'),
+          content: Text("Failed to pick image.\n$e"),
         ),
       );
     } finally {
@@ -82,7 +82,6 @@ class _CameraScreenState extends State<CameraScreen> {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-
               Expanded(
                 child: Container(
                   width: double.infinity,
@@ -99,21 +98,17 @@ class _CameraScreenState extends State<CameraScreen> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 25),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-
                   IconButton(
                     iconSize: 32,
                     onPressed: _isPickingImage
                         ? null
                         : () => _pickImage(ImageSource.camera),
-                    icon: const Icon(Icons.flash_on),
+                    icon: const Icon(Icons.camera_alt),
                   ),
-
                   GestureDetector(
                     onTap: _isPickingImage
                         ? null
@@ -136,7 +131,6 @@ class _CameraScreenState extends State<CameraScreen> {
                       ),
                     ),
                   ),
-
                   IconButton(
                     iconSize: 32,
                     onPressed: _isPickingImage
@@ -146,7 +140,6 @@ class _CameraScreenState extends State<CameraScreen> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 25),
             ],
           ),

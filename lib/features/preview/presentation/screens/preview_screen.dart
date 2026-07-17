@@ -1,12 +1,15 @@
-import 'dart:typed_data';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class PreviewScreen extends StatelessWidget {
-  const PreviewScreen({super.key, this.imageBytes});
+  const PreviewScreen({
+    super.key,
+    required this.imageFile,
+  });
 
-  final Uint8List? imageBytes;
+  final File imageFile;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +22,6 @@ class PreviewScreen extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-
               Expanded(
                 child: Container(
                   width: double.infinity,
@@ -29,20 +31,10 @@ class PreviewScreen extends StatelessWidget {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
-                    child: imageBytes == null
-                        ? const Center(
-                            child: Icon(
-                              Icons.image,
-                              size: 100,
-                              color: Colors.grey,
-                            ),
-                          )
-                        : Image.memory(
-                            imageBytes!,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
-                          ),
+                    child: Image.file(
+                      imageFile,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
@@ -51,7 +43,6 @@ class PreviewScreen extends StatelessWidget {
 
               Row(
                 children: [
-
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () {
@@ -66,15 +57,16 @@ class PreviewScreen extends StatelessWidget {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        context.push("/loading");
+                        context.push(
+                          "/debug",
+                          extra: imageFile,
+                        );
                       },
                       child: const Text("Accept"),
                     ),
                   ),
-
                 ],
               ),
-
             ],
           ),
         ),

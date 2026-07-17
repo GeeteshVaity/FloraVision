@@ -39,7 +39,8 @@ dependencies:
   #google_fonts: ^6.3.0
   flutter_animate: ^4.5.2
   image_picker: ^1.2.0
-  #image: ^4.5.4
+  image: ^4.5.4
+  flutter_litert: ^3.5.1
   #tflite_flutter: ^0.12.1
 #------------------------------
 
@@ -60,15 +61,13 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
   uses-material-design: true
 
-assets:
+  assets:
     - assets/images/
     - assets/images/plants/
+    - assets/models/
+    - assets/labels/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
