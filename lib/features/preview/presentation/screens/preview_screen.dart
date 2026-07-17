@@ -58,7 +58,7 @@ class PreviewScreen extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () {
                         context.push(
-                          "/debug",
+                          "/loading",
                           extra: imageFile,
                         );
                       },

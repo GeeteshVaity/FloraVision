@@ -1,128 +1,93 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class ResultScreen extends StatelessWidget {
-  const ResultScreen({super.key});
+import '../../../../models/prediction.dart';
 
-  Widget buildInfoTile(
-      String title,
-      String value,
-      IconData icon,
-      ) {
-    return Card(
-      elevation: 1,
-      child: ListTile(
-        leading: Icon(icon),
-        title: Text(title),
-        subtitle: Text(value),
-      ),
-    );
-  }
+class ResultScreen extends StatelessWidget {
+  const ResultScreen({
+    super.key,
+    required this.prediction,
+    required this.imageFile,
+  });
+
+  final Prediction prediction;
+  final File imageFile;
 
   @override
   Widget build(BuildContext context) {
+    final confidencePercentage =
+        (prediction.confidence * 100).toStringAsFixed(1);
 
     return Scaffold(
-
       appBar: AppBar(
-        title: const Text("Plant Details"),
+        title: const Text("Identification Result"),
       ),
-
       body: SafeArea(
-
         child: SingleChildScrollView(
-
           padding: const EdgeInsets.all(20),
-
           child: Column(
-
             crossAxisAlignment: CrossAxisAlignment.stretch,
-
             children: [
 
-              Container(
-                height: 250,
-                decoration: BoxDecoration(
-                  color: Colors.green.shade100,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: const Center(
-                  child: Icon(
-                    Icons.local_florist,
-                    size: 120,
-                  ),
+              // Original flower image
+              ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.file(
+                  imageFile,
+                  height: 300,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
                 ),
               ),
 
-              const SizedBox(height: 25),
+              const SizedBox(height: 30),
 
-              const Center(
-                child: Text(
-                  "Rose",
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
+              const Text(
+                "AI Prediction",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
                 ),
               ),
 
               const SizedBox(height: 8),
 
-              const Center(
-                child: Text(
-                  "Rosa rubiginosa",
-                  style: TextStyle(
-                    fontStyle: FontStyle.italic,
-                    fontSize: 18,
-                  ),
+              Text(
+                prediction.label.toUpperCase(),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
 
-              const SizedBox(height: 25),
+              const SizedBox(height: 20),
 
-              buildInfoTile(
-                "Confidence",
-                "96%",
-                Icons.analytics,
-              ),
-
-              buildInfoTile(
-                "Description",
-                "A flowering shrub belonging to the rose family.",
-                Icons.description,
-              ),
-
-              buildInfoTile(
-                "Water",
-                "Medium",
-                Icons.water_drop,
-              ),
-
-              buildInfoTile(
-                "Sunlight",
-                "Full Sun",
-                Icons.wb_sunny,
-              ),
-
-              buildInfoTile(
-                "Difficulty",
-                "Easy",
-                Icons.star,
+              Card(
+                child: ListTile(
+                  leading: const Icon(
+                    Icons.analytics,
+                  ),
+                  title: const Text("Confidence"),
+                  subtitle: Text(
+                    "$confidencePercentage%",
+                  ),
+                ),
               ),
 
               const SizedBox(height: 30),
 
               ElevatedButton(
                 onPressed: () {
-
                   context.go("/home");
-
                 },
                 child: const Text(
                   "Identify Another Plant",
                 ),
               ),
-
             ],
           ),
         ),

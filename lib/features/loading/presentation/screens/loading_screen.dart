@@ -34,7 +34,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
       context.go(
         "/result",
-        extra: prediction,
+        extra: {
+          "prediction": prediction,
+          "imageFile": widget.imageFile,
+        },
       );
     } catch (e) {
       debugPrint("Classification Error: $e");

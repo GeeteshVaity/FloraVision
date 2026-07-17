@@ -8,7 +8,7 @@ import '../../features/loading/presentation/screens/loading_screen.dart';
 import '../../features/preview/presentation/screens/preview_screen.dart';
 import '../../features/result/presentation/screens/result_screen.dart';
 import '../../features/splash/presentation/screens/splash_screen.dart';
-import '../../features/debug/presentation/screens/inference_test_screen.dart';
+import '../../models/prediction.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: "/",
@@ -40,18 +40,6 @@ final GoRouter appRouter = GoRouter(
     ),
 
     GoRoute(
-  path: "/debug",
-  builder: (context, state) {
-
-      final imageFile = state.extra as File;
-
-      return InferenceTestScreen(
-        imageFile: imageFile,
-      );
-    },
-  ),
-
-    GoRoute(
       path: "/loading",
       builder: (context, state) {
         final imageFile = state.extra as File;
@@ -64,7 +52,20 @@ final GoRouter appRouter = GoRouter(
 
     GoRoute(
       path: "/result",
-      builder: (context, state) => const ResultScreen(),
+      builder: (context, state) {
+        final data = state.extra as Map<String, dynamic>;
+    
+        final prediction =
+            data["prediction"] as Prediction;
+    
+        final imageFile =
+            data["imageFile"] as File;
+    
+        return ResultScreen(
+          prediction: prediction,
+          imageFile: imageFile,
+        );
+      },
     ),
   ],
 );
