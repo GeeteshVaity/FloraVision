@@ -5,6 +5,7 @@ import 'package:flutter_litert/flutter_litert.dart';
 
 import '../models/prediction.dart';
 import '../utils/image_preprocessor.dart';
+import 'flower_data.dart';
 import 'model_service.dart';
 
 class PlantClassifier {   
@@ -42,13 +43,18 @@ class PlantClassifier {
       }
     }
 
+    final label = ModelService.instance.labels[bestIndex];
+    final flowerInfo = FlowerData.flowers[label];
+
     final prediction = Prediction(
-      label: ModelService.instance.labels[bestIndex],
+      label: label,
+      simplifiedName: flowerInfo?.simplifiedName ?? label,
+      funFact: flowerInfo?.funFact ?? "No fun fact available for this flower.",
       confidence: bestScore,
     );
 
     debugPrint(
-      "Prediction : ${prediction.label} (${prediction.confidence})",
+      "Prediction : ${prediction.simplifiedName} (${prediction.confidence})",
     );
 
     return prediction;

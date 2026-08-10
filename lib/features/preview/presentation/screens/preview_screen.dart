@@ -50,154 +50,192 @@ class PreviewScreen extends StatelessWidget {
       ),
 
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(
-            24,
-            30,
-            24,
-            28,
-          ),
-          child: Column(
-            children: [
-              const Spacer(),
+        child: OrientationBuilder(
+          builder: (context, orientation) {
+            final isLandscape = orientation == Orientation.landscape;
 
-              // Selected flower image
-              Container(
-                width: double.infinity,
-                constraints: const BoxConstraints(
-                  maxHeight: 500,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(28),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(
-                        alpha: 0.08,
+            if (isLandscape) {
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.file(imageFile, fit: BoxFit.cover),
                       ),
-                      blurRadius: 20,
-                      offset: const Offset(0, 8),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "“Every petal tells a story of the sun.”",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 15, fontStyle: FontStyle.italic, color: textGrey, fontFamily: "serif"),
+                          ),
+                          const SizedBox(height: 20),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: SizedBox(
+                                  height: 50,
+                                  child: OutlinedButton(
+                                    onPressed: () => context.pop(),
+                                    style: OutlinedButton.styleFrom(
+                                      foregroundColor: darkBrown,
+                                      side: const BorderSide(color: borderColor, width: 2),
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                    ),
+                                    child: const Text("RETAKE"),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: SizedBox(
+                                  height: 50,
+                                  child: ElevatedButton(
+                                    onPressed: () => context.push("/loading", extra: imageFile),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: primaryOrange,
+                                      foregroundColor: Colors.white,
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                    ),
+                                    child: const Text("ACCEPT"),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(28),
-                  child: AspectRatio(
-                    aspectRatio: 0.82,
-                    child: Image.file(
-                      imageFile,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ),
+              );
+            }
 
-              const SizedBox(height: 32),
-
-              // Decorative quote
-              const Text(
-                "“Every petal tells a story of the sun.”",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 18,
-                  height: 1.4,
-                  fontStyle: FontStyle.italic,
-                  color: textGrey,
-                  fontFamily: "serif",
-                ),
-              ),
-
-              const SizedBox(height: 12),
-
-              // Scan label
-              const Text(
-                "BOTANICAL SCAN",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  letterSpacing: 3,
-                  fontWeight: FontWeight.w500,
-                  color: textGrey,
-                ),
-              ),
-
-              const Spacer(),
-
-              // Action buttons
-              Row(
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              child: Column(
                 children: [
+                  // Selected flower image
                   Expanded(
-                    child: SizedBox(
-                      height: 62,
-                      child: OutlinedButton.icon(
-                        onPressed: () {
-                          context.pop();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          size: 25,
-                        ),
-                        label: const Text(
-                          "RETAKE",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 1.2,
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(24),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.08),
+                            blurRadius: 15,
+                            offset: const Offset(0, 5),
                           ),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: darkBrown,
-                          side: const BorderSide(
-                            color: borderColor,
-                            width: 2,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
+                        ],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(24),
+                        child: Image.file(
+                          imageFile,
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
                   ),
 
-                  const SizedBox(width: 16),
+                  const SizedBox(height: 20),
 
-                  Expanded(
-                    child: SizedBox(
-                      height: 62,
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          context.push(
-                            "/loading",
-                            extra: imageFile,
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.check_circle_outline,
-                          size: 24,
+                  // Info Section
+                  const Column(
+                    children: [
+                      Text(
+                        "“Every petal tells a story of the sun.”",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 16,
+                          height: 1.3,
+                          fontStyle: FontStyle.italic,
+                          color: textGrey,
+                          fontFamily: "serif",
                         ),
-                        label: const Text(
-                          "ACCEPT",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 1.2,
-                          ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        "BOTANICAL SCAN",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 12,
+                          letterSpacing: 2,
+                          fontWeight: FontWeight.w500,
+                          color: textGrey,
                         ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: primaryOrange,
-                          foregroundColor: Colors.white,
-                          elevation: 4,
-                          shadowColor: Colors.black26,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // Action buttons
+                  Row(
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 56,
+                          child: OutlinedButton.icon(
+                            onPressed: () => context.pop(),
+                            icon: const Icon(Icons.refresh, size: 22),
+                            label: const Text(
+                              "RETAKE",
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 1),
+                            ),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: darkBrown,
+                              side: const BorderSide(
+                                  color: borderColor, width: 2),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16)),
+                            ),
                           ),
                         ),
                       ),
-                    ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: SizedBox(
+                          height: 56,
+                          child: ElevatedButton.icon(
+                            onPressed: () =>
+                                context.push("/loading", extra: imageFile),
+                            icon: const Icon(Icons.check_circle_outline,
+                                size: 22),
+                            label: const Text(
+                              "ACCEPT",
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 1),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: primaryOrange,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16)),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

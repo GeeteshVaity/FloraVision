@@ -82,195 +82,197 @@ class _LoadingScreenState extends State<LoadingScreen>
     return Scaffold(
       backgroundColor: backgroundColor,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 32,
-          ),
-          child: Column(
-            children: [
-              const Spacer(flex: 2),
+        child: OrientationBuilder(
+          builder: (context, orientation) {
+            final isLandscape = orientation == Orientation.landscape;
 
-              // Image being analyzed
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  // Outer animated ring
-                  RotationTransition(
-                    turns: _animationController,
-                    child: Container(
-                      width: 230,
-                      height: 230,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: primaryOrange.withValues(
-                            alpha: 0.20,
-                          ),
-                          width: 2,
+            if (isLandscape) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Center(
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            RotationTransition(
+                              turns: _animationController,
+                              child: Container(
+                                width: 140,
+                                height: 140,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: primaryOrange.withValues(alpha: 0.20), width: 2),
+                                ),
+                                child: Align(
+                                  alignment: Alignment.topCenter,
+                                  child: Container(width: 6, height: 6, decoration: const BoxDecoration(color: primaryOrange, shape: BoxShape.circle)),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: 120,
+                              height: 120,
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: backgroundColor,
+                                border: Border.all(color: subtleLine),
+                              ),
+                              child: ClipOval(child: Image.file(widget.imageFile, fit: BoxFit.cover)),
+                            ),
+                          ],
                         ),
                       ),
-                      child: Align(
-                        alignment: Alignment.topCenter,
+                    ),
+                    const SizedBox(width: 24),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const Text(
+                            "Analyzing bloom...",
+                            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600, color: darkBrown, fontFamily: "serif"),
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            "Our AI is studying the unique details.",
+                            style: TextStyle(fontSize: 14, color: textGrey),
+                          ),
+                          const SizedBox(height: 24),
+                          const LinearProgressIndicator(color: primaryOrange, backgroundColor: subtleLine),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
+              child: Column(
+                children: [
+                  const Spacer(flex: 1),
+                  // Image being analyzed
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // Outer animated ring
+                      RotationTransition(
+                        turns: _animationController,
                         child: Container(
-                          width: 10,
-                          height: 10,
-                          decoration: const BoxDecoration(
-                            color: primaryOrange,
+                          width: 180,
+                          height: 180,
+                          decoration: BoxDecoration(
                             shape: BoxShape.circle,
+                            border: Border.all(
+                              color: primaryOrange.withValues(alpha: 0.20),
+                              width: 2,
+                            ),
+                          ),
+                          child: Align(
+                            alignment: Alignment.topCenter,
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              decoration: const BoxDecoration(
+                                  color: primaryOrange, shape: BoxShape.circle),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-
-                  // Inner image
-                  Container(
-                    width: 195,
-                    height: 195,
-                    padding: const EdgeInsets.all(7),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: backgroundColor,
-                      border: Border.all(
-                        color: subtleLine,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(
-                            alpha: 0.06,
-                          ),
-                          blurRadius: 25,
-                          offset: const Offset(0, 10),
-                        ),
-                      ],
-                    ),
-                    child: ClipOval(
-                      child: Image.file(
-                        widget.imageFile,
-                        width: 180,
-                        height: 180,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-
-                  // AI scan icon
-                  Positioned(
-                    bottom: 5,
-                    right: 15,
-                    child: Container(
-                      width: 48,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: primaryOrange,
-                        shape: BoxShape.circle,
-                        border: Border.all(
+                      // Inner image
+                      Container(
+                        width: 150,
+                        height: 150,
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
                           color: backgroundColor,
-                          width: 4,
+                          border: Border.all(color: subtleLine),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.06),
+                              blurRadius: 20,
+                              offset: const Offset(0, 8),
+                            ),
+                          ],
+                        ),
+                        child: ClipOval(
+                          child: Image.file(
+                            widget.imageFile,
+                            width: 140,
+                            height: 140,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                      child: const Icon(
-                        Icons.auto_awesome,
-                        color: Colors.white,
-                        size: 22,
+                    ],
+                  ),
+
+                  const SizedBox(height: 40),
+
+                  // Main title
+                  const Text(
+                    "Analyzing your bloom",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 30,
+                      height: 1.1,
+                      fontWeight: FontWeight.w600,
+                      color: darkBrown,
+                      fontFamily: "serif",
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  // Subtitle
+                  const Text(
+                    "Our AI is studying the unique\ndetails of your flower.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16, height: 1.4, color: textGrey),
+                  ),
+
+                  const Spacer(flex: 1),
+
+                  // Decorative loading indicator
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(width: 40, height: 1, color: subtleLine),
+                      const SizedBox(width: 16),
+                      const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                            strokeWidth: 2, color: primaryOrange),
                       ),
+                      const SizedBox(width: 16),
+                      Container(width: 40, height: 1, color: subtleLine),
+                    ],
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  const Text(
+                    "AI IDENTIFICATION IN PROGRESS",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 10,
+                      letterSpacing: 2,
+                      fontWeight: FontWeight.w500,
+                      color: textGrey,
                     ),
                   ),
+                  const Spacer(flex: 1),
                 ],
               ),
-
-              const SizedBox(height: 60),
-
-              // Main title
-              const Text(
-                "Analyzing your bloom",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 36,
-                  height: 1.1,
-                  fontWeight: FontWeight.w600,
-                  color: darkBrown,
-                  fontFamily: "serif",
-                ),
-              ),
-
-              const SizedBox(height: 18),
-
-              // Subtitle
-              const Text(
-                "Our AI is studying the unique details\n"
-                "of your flower.",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 17,
-                  height: 1.6,
-                  color: textGrey,
-                ),
-              ),
-
-              const SizedBox(height: 45),
-
-              // Decorative loading indicator
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 45,
-                    height: 1,
-                    color: subtleLine,
-                  ),
-
-                  const SizedBox(width: 18),
-
-                  const SizedBox(
-                    width: 22,
-                    height: 22,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: primaryOrange,
-                    ),
-                  ),
-
-                  const SizedBox(width: 18),
-
-                  Container(
-                    width: 45,
-                    height: 1,
-                    color: subtleLine,
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 25),
-
-              const Text(
-                "AI IDENTIFICATION IN PROGRESS",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 11,
-                  letterSpacing: 2.2,
-                  fontWeight: FontWeight.w500,
-                  color: textGrey,
-                ),
-              ),
-
-              const Spacer(flex: 3),
-
-              // Bottom message
-              const Text(
-                "DISCOVERING NATURE'S DETAILS",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 11,
-                  letterSpacing: 2.5,
-                  fontWeight: FontWeight.w500,
-                  color: textGrey,
-                ),
-              ),
-
-              const SizedBox(height: 32),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

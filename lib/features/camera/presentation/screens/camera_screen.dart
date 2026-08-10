@@ -102,156 +102,212 @@ class _CameraScreenState extends State<CameraScreen> {
       ),
 
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(
-            24,
-            28,
-            24,
-            32,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Flower illustration circle
-              Center(
-                child: Container(
-                  width: 180,
-                  height: 180,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(
-                          alpha: 0.06,
+        child: OrientationBuilder(
+          builder: (context, orientation) {
+            final isLandscape = orientation == Orientation.landscape;
+
+            if (isLandscape) {
+              return Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Center(
+                        child: Container(
+                          width: 150,
+                          height: 150,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.06),
+                                blurRadius: 20,
+                                offset: const Offset(0, 8),
+                              ),
+                            ],
+                          ),
+                          child: const Icon(Icons.local_florist_outlined, size: 60, color: primaryOrange),
                         ),
-                        blurRadius: 25,
-                        offset: const Offset(0, 10),
+                      ),
+                    ),
+                    const SizedBox(width: 24),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const Text(
+                            "Identify a Flower",
+                            style: TextStyle(fontSize: 28, fontWeight: FontWeight.w600, color: darkBrown, fontFamily: "serif"),
+                          ),
+                          const SizedBox(height: 12),
+                          const Text(
+                            "Take a photo or choose an image to identify.",
+                            style: TextStyle(fontSize: 14, color: textGrey),
+                          ),
+                          const SizedBox(height: 24),
+                          SizedBox(
+                            height: 50,
+                            child: ElevatedButton.icon(
+                              onPressed: _isPickingImage ? null : () => _pickImage(ImageSource.camera),
+                              icon: const Icon(Icons.camera_alt_outlined, size: 20),
+                              label: const Text("Take Photo", style: TextStyle(fontWeight: FontWeight.w600)),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: primaryOrange,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          SizedBox(
+                            height: 50,
+                            child: OutlinedButton.icon(
+                              onPressed: _isPickingImage ? null : () => _pickImage(ImageSource.gallery),
+                              icon: const Icon(Icons.photo_library_outlined, size: 20),
+                              label: const Text("Choose from Gallery", style: TextStyle(fontWeight: FontWeight.w500)),
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: primaryOrange,
+                                side: const BorderSide(color: borderColor, width: 2),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Spacer(flex: 1),
+                  // Flower illustration circle
+                  Center(
+                    child: Container(
+                      width: 150,
+                      height: 150,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.06),
+                            blurRadius: 20,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
+                      ),
+                      child: const Icon(
+                        Icons.local_florist_outlined,
+                        size: 60,
+                        color: primaryOrange,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 40),
+
+                  // Heading
+                  const Text(
+                    "Identify a Flower",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 32,
+                      height: 1.1,
+                      fontWeight: FontWeight.w600,
+                      color: darkBrown,
+                      fontFamily: "serif",
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Description
+                  const Text(
+                    "Take a photo or choose\nan image to identify.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16,
+                      height: 1.4,
+                      color: textGrey,
+                    ),
+                  ),
+
+                  const Spacer(flex: 2),
+
+                  // Action Buttons
+                  Column(
+                    children: [
+                      // Take Photo button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 56,
+                        child: ElevatedButton.icon(
+                          onPressed: _isPickingImage
+                              ? null
+                              : () => _pickImage(ImageSource.camera),
+                          icon: const Icon(Icons.camera_alt_outlined, size: 22),
+                          label: const Text(
+                            "Take Photo",
+                            style: TextStyle(
+                                fontSize: 17, fontWeight: FontWeight.w600),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: primaryOrange,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14)),
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 12),
+
+                      // Gallery button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 56,
+                        child: OutlinedButton.icon(
+                          onPressed: _isPickingImage
+                              ? null
+                              : () => _pickImage(ImageSource.gallery),
+                          icon: const Icon(Icons.photo_library_outlined, size: 22),
+                          label: const Text(
+                            "Choose from Gallery",
+                            style: TextStyle(
+                                fontSize: 17, fontWeight: FontWeight.w500),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: primaryOrange,
+                            side:
+                                const BorderSide(color: borderColor, width: 2),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14)),
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                  child: const Icon(
-                    Icons.local_florist_outlined,
-                    size: 75,
-                    color: primaryOrange,
-                  ),
-                ),
+
+                  // Loading indicator
+                  if (_isPickingImage) ...[
+                    const SizedBox(height: 16),
+                    const Center(
+                      child: CircularProgressIndicator(color: primaryOrange),
+                    ),
+                  ],
+                  const Spacer(flex: 1),
+                ],
               ),
-
-              const SizedBox(height: 55),
-
-              // Heading
-              const Text(
-                "Identify a Flower",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 36,
-                  height: 1.15,
-                  fontWeight: FontWeight.w600,
-                  color: darkBrown,
-                  fontFamily: "serif",
-                ),
-              ),
-
-              const SizedBox(height: 22),
-
-              // Description
-              const Text(
-                "Take a clear photo of a flower or\n"
-                "choose an existing image from your\n"
-                "gallery.",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 18,
-                  height: 1.55,
-                  color: textGrey,
-                ),
-              ),
-
-              const SizedBox(height: 55),
-
-              // Take Photo button
-              SizedBox(
-                height: 62,
-                child: ElevatedButton.icon(
-                  onPressed: _isPickingImage
-                      ? null
-                      : () => _pickImage(
-                            ImageSource.camera,
-                          ),
-                  icon: const Icon(
-                    Icons.camera_alt_outlined,
-                    size: 26,
-                  ),
-                  label: const Text(
-                    "Take Photo",
-                    style: TextStyle(
-                      fontSize: 19,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: primaryOrange,
-                    foregroundColor: Colors.white,
-                    disabledBackgroundColor:
-                        primaryOrange.withValues(
-                      alpha: 0.5,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    elevation: 3,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // Gallery button
-              SizedBox(
-                height: 62,
-                child: OutlinedButton.icon(
-                  onPressed: _isPickingImage
-                      ? null
-                      : () => _pickImage(
-                            ImageSource.gallery,
-                          ),
-                  icon: const Icon(
-                    Icons.photo_library_outlined,
-                    size: 25,
-                  ),
-                  label: const Text(
-                    "Choose from Gallery",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: primaryOrange,
-                    side: const BorderSide(
-                      color: borderColor,
-                      width: 2,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                  ),
-                ),
-              ),
-
-              // Loading indicator
-              if (_isPickingImage) ...[
-                const SizedBox(height: 24),
-                const Center(
-                  child: CircularProgressIndicator(
-                    color: primaryOrange,
-                  ),
-                ),
-              ],
-
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

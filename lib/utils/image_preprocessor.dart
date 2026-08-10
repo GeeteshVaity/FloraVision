@@ -35,9 +35,9 @@ class ImagePreprocessor {
             final pixel = image!.getPixel(x, y);
 
             return [
-              pixel.r.toDouble(),
-              pixel.g.toDouble(),
-              pixel.b.toDouble(),
+              pixel.r.toDouble() / 255.0,
+              pixel.g.toDouble() / 255.0,
+              pixel.b.toDouble() / 255.0,
             ];
           },
         ),
